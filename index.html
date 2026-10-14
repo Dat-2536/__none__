@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Công cụ PDF &amp; Ảnh — SV5T</title>
+  <meta name="description" content="Chuyển ảnh sang PDF, gộp PDF, nén ảnh ngay trên trình duyệt. File không được tải lên máy chủ." />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📄</text></svg>" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header>
+    <h1>Công cụ PDF &amp; Ảnh</h1>
+    <p class="sub">Xử lý 100% trên trình duyệt — file của bạn <strong>không</strong> được tải lên đâu cả.</p>
+    <nav class="tabs" role="tablist">
+      <button class="tab active" data-tab="img2pdf" role="tab">🖼️ Ảnh → PDF</button>
+      <button class="tab" data-tab="merge" role="tab">📚 Gộp PDF</button>
+      <button class="tab" data-tab="compress" role="tab">🗜️ Nén ảnh</button>
+    </nav>
+  </header>
+
+  <main>
+    <!-- Ảnh → PDF -->
+    <section class="panel active" id="panel-img2pdf">
+      <label class="drop" data-target="img2pdf">
+        <input type="file" multiple accept="image/*,.jfif" hidden />
+        <span class="drop-icon">⬆️</span>
+        <span>Kéo thả ảnh vào đây hoặc <u>bấm để chọn</u></span>
+        <small>JPG, PNG, WEBP, GIF, BMP…</small>
+      </label>
+
+      <div class="options">
+        <label>Chế độ
+          <select id="i2p-mode">
+            <option value="each">Mỗi ảnh → 1 PDF (cùng tên)</option>
+            <option value="one">Gộp tất cả ảnh → 1 PDF</option>
+          </select>
+        </label>
+        <label>Khổ trang
+          <select id="i2p-page">
+            <option value="image">Theo kích thước ảnh</option>
+            <option value="a4">A4 (tự xoay dọc/ngang, căn giữa)</option>
+          </select>
+        </label>
+        <label>Chất lượng ảnh
+          <select id="i2p-quality">
+            <option value="original">Giữ nguyên</option>
+            <option value="compress">Nén nhẹ (JPEG 80%, tối đa 2000px)</option>
+          </select>
+        </label>
+        <label id="i2p-name-wrap" hidden>Tên file
+          <input id="i2p-name" type="text" value="tong-hop" />
+        </label>
+      </div>
+
+      <div class="list" data-list="img2pdf"></div>
+      <div class="actions">
+        <button class="ghost" data-sort="img2pdf">Sắp xếp theo tên</button>
+        <button class="ghost" data-clear="img2pdf">Xóa hết</button>
+        <button class="primary" id="i2p-run" disabled>Chuyển sang PDF</button>
+      </div>
+      <div class="results" id="i2p-results"></div>
+    </section>
+
+    <!-- Gộp PDF -->
+    <section class="panel" id="panel-merge">
+      <label class="drop" data-target="merge">
+        <input type="file" multiple accept="application/pdf,image/*,.jfif" hidden />
+        <span class="drop-icon">⬆️</span>
+        <span>Kéo thả file PDF (hoặc ảnh) vào đây hoặc <u>bấm để chọn</u></span>
+        <small>Kéo các dòng bên dưới để đổi thứ tự</small>
+      </label>
+
+      <div class="options">
+        <label>Tên file kết quả
+          <input id="merge-name" type="text" value="da-gop" />
+        </label>
+      </div>
+
+      <div class="list" data-list="merge"></div>
+      <div class="actions">
+        <button class="ghost" data-sort="merge">Sắp xếp theo tên</button>
+        <button class="ghost" data-clear="merge">Xóa hết</button>
+        <button class="primary" id="merge-run" disabled>Gộp PDF</button>
+      </div>
+      <div class="results" id="merge-results"></div>
+    </section>
+
+    <!-- Nén ảnh -->
+    <section class="panel" id="panel-compress">
+      <label class="drop" data-target="compress">
+        <input type="file" multiple accept="image/*,.jfif" hidden />
+        <span class="drop-icon">⬆️</span>
+        <span>Kéo thả ảnh vào đây hoặc <u>bấm để chọn</u></span>
+        <small>Mỗi ảnh được nén riêng, giữ tên gốc</small>
+      </label>
+
+      <div class="options">
+        <label>Cách nén
+          <select id="c-mode">
+            <option value="target">Theo dung lượng tối đa</option>
+            <option value="quality">Theo chất lượng</option>
+          </select>
+        </label>
+        <label id="c-target-wrap">Tối đa (KB)
+          <input id="c-target" type="number" min="10" step="10" value="500" />
+        </label>
+        <label id="c-quality-wrap" hidden>Chất lượng: <b id="c-quality-val">75</b>%
+          <input id="c-quality" type="range" min="10" max="100" value="75" />
+        </label>
+        <label>Cạnh dài tối đa (px, 0 = giữ)
+          <input id="c-maxdim" type="number" min="0" step="100" value="0" />
+        </label>
+        <label>Định dạng
+          <select id="c-format">
+            <option value="image/jpeg">JPG</option>
+            <option value="image/webp">WEBP</option>
+          </select>
+        </label>
+      </div>
+
+      <div class="list" data-list="compress"></div>
+      <div class="actions">
+        <button class="ghost" data-clear="compress">Xóa hết</button>
+        <button class="primary" id="c-run" disabled>Nén ảnh</button>
+      </div>
+      <div class="results" id="c-results"></div>
+    </section>
+  </main>
+
+  <footer>Không lưu, không gửi dữ liệu. Đóng tab là mọi thứ biến mất.</footer>
+
+  <div id="toast" hidden></div>
+
+  <script src="vendor/pdf-lib.min.js"></script>
+  <script src="vendor/jszip.min.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
